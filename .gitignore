@@ -1,0 +1,11 @@
+.DS_Store
+.idea/
+node_modules/
+.next/
+out/
+build/
+coverage/
+*.log
+.env
+.env.local
+.env.*.local
