@@ -23,6 +23,8 @@ export const AiUsageSchema = z.object({
   status: AiUsageStatusSchema,
   errorType: z.string().nullable(),
   durationMs: z.number().int().nonnegative(),
+  inputTokens: z.number().int().nonnegative().optional(),
+  outputTokens: z.number().int().nonnegative().optional(),
   timestamp: z.date(),
 });
 export type AiUsage = z.infer<typeof AiUsageSchema>;
