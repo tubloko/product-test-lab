@@ -6,7 +6,7 @@ import {
   LandingMatchSchema,
   OfferSchema,
 } from './hypothesis';
-import { ViabilityAnswersSchema } from './viability';
+import { ViabilityAnswersSchema, ViabilitySummarySchema } from './viability';
 
 export const WIZARD_SESSION_STATUSES = [
   'in_progress',
@@ -40,13 +40,19 @@ export const WizardContextSchema = z.object({
 });
 export type WizardContext = z.infer<typeof WizardContextSchema>;
 
+export const WizardViabilitySliceSchema = z.object({
+  answers: ViabilityAnswersSchema,
+  summary: ViabilitySummarySchema,
+});
+export type WizardViabilitySlice = z.infer<typeof WizardViabilitySliceSchema>;
+
 export const WizardSessionInputSchema = z.object({
   productId: z.string(),
   currentStep: z.number().int().min(1).max(9),
   status: WizardSessionStatusSchema,
   productBasics: WizardProductBasicsSchema.nullable(),
   context: WizardContextSchema.nullable(),
-  viability: ViabilityAnswersSchema.nullable(),
+  viability: WizardViabilitySliceSchema.nullable(),
   selectedAvatars: z.array(AvatarSuggestionSchema).nullable(),
   selectedAngles: z.record(z.string(), AngleSuggestionSchema).nullable(),
   landingMatches: z.record(z.string(), LandingMatchSchema).nullable(),

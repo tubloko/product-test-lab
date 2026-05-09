@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useProducts } from '@/hooks/useProducts';
+import { useStartWizard } from '@/hooks/useStartWizard';
 import { EmptyState } from '@/components/EmptyState';
 import { Pipeline } from '@/components/Pipeline';
 import { ResumeWizardBanner } from '@/components/ResumeWizardBanner';
@@ -14,6 +15,7 @@ export default function DashboardPage() {
   const [showScaling, setShowScaling] = useState(false);
   const [quickAddOpen, setQuickAddOpen] = useState(false);
   const { data: products, loading, error } = useProducts();
+  const { start, loading: starting } = useStartWizard();
 
   const hasProducts = products.length > 0;
 
@@ -22,9 +24,9 @@ export default function DashboardPage() {
       <header className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <h1 className="text-display text-text">Products</h1>
         <div className="flex gap-2">
-          <Button variant="secondary" disabled title="Coming in E7">
+          <Button variant="secondary" onClick={start} disabled={starting}>
             <Plus className="size-4" />
-            Guided setup
+            {starting ? 'Starting…' : 'Guided setup'}
           </Button>
           <Button onClick={() => setQuickAddOpen(true)}>
             <Plus className="size-4" />
