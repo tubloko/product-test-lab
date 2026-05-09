@@ -1,5 +1,4 @@
 import {
-  Timestamp,
   doc,
   getDoc,
   serverTimestamp,
@@ -8,7 +7,8 @@ import {
 } from 'firebase/firestore';
 import type { User as FirebaseUser } from 'firebase/auth';
 import { db } from './config';
-import { UserSchema, type User, type UserSource } from '@/types/user';
+import { toUser } from './converters';
+import type { User, UserSource } from '@/types/user';
 
 export function inferSource(user: FirebaseUser): UserSource {
   return user.providerData[0]?.providerId === 'google.com'
@@ -20,24 +20,6 @@ function deriveDisplayName(user: FirebaseUser): string {
   if (user.displayName?.trim()) return user.displayName;
   const localPart = user.email?.split('@')[0];
   return localPart && localPart.length > 0 ? localPart : 'You';
-}
-
-function toDate(value: unknown): Date {
-  if (value instanceof Timestamp) return value.toDate();
-  if (value instanceof Date) return value;
-  return new Date(0);
-}
-
-function toUser(raw: { id: string } & Record<string, unknown>): User {
-  const parsed = UserSchema.parse({
-    id: raw.id,
-    email: raw.email,
-    displayName: raw.displayName,
-    createdAt: toDate(raw.createdAt),
-    lastActiveAt: toDate(raw.lastActiveAt),
-    source: raw.source,
-  });
-  return parsed;
 }
 
 export async function ensureUserDocument(user: FirebaseUser): Promise<void> {
