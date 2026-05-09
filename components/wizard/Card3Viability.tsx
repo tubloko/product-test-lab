@@ -192,8 +192,13 @@ export function Card3Viability({ session, sessionId }: Card3Props) {
     }
   };
 
-  const handleContinue = () => {
-    toast('Cards 4–9 land in E7.2.');
+  const handleContinue = async () => {
+    try {
+      await updateWizardSession(sessionId, { currentStep: 4 });
+    } catch (e) {
+      console.error('[wizard/card3] continue failed', e);
+      toast.error('Could not advance.');
+    }
   };
 
   const handleSaveAsKilled = async () => {
@@ -275,7 +280,7 @@ export function Card3Viability({ session, sessionId }: Card3Props) {
             >
               {savingKilled ? 'Saving…' : 'Save as Killed'}
             </Button>
-            <Button onClick={handleContinue} disabled title="Cards 4–9 land in E7.2">
+            <Button onClick={handleContinue} disabled={savingKilled}>
               Continue to hypotheses →
             </Button>
           </div>
